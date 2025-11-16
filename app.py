@@ -12,7 +12,6 @@ llm_model_name = st.sidebar.text_input("LLM Model", "phi3", help="e.g., phi3, mi
 
 st.sidebar.markdown("---")
 
-
 server_up, server_msg = models.check_ollama_server(ollama_host)
 models_ready = False
 

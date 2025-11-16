@@ -24,31 +24,30 @@ def check_ollama_model(model_name: str):
     """
     try:
         response = ollama.list()
-        
-        # 1. Standardize the list of models from the response
+    
         models_list = []
         if hasattr(response, 'models'):
-            # Newer library versions return an object with a 'models' attribute
+
             models_list = response.models
         elif isinstance(response, dict):
-            # Older library versions or raw API return a dict
+ 
             models_list = response.get('models', [])
         elif isinstance(response, list):
-            # Fallback if it returns a direct list
+
             models_list = response
             
-        # 2. Iterate and check names
+
         for m in models_list:
             name = ""
-            # Attempt to extract name from various possible structures
+
             if hasattr(m, 'model'): 
-                name = m.model # Object style (new)
+                name = m.model 
             elif hasattr(m, 'name'):
-                name = m.name  # Alternate object style
+                name = m.name  
             elif isinstance(m, dict):
-                name = m.get('name') or m.get('model') # Dict style
+                name = m.get('name') or m.get('model')
             
-            # 3. Match check
+
             if name and name.startswith(model_name):
                 return True, ""
                 
@@ -62,14 +61,14 @@ def analyze_image(image_bytes: bytes, prompt: str, model: str) -> str:
     Sends an image and a prompt to a multimodal Ollama model (e.g., LLaVA).
     """
     try:
-        # Encode image to base64
+
         base64_image = base64.b64encode(image_bytes).decode('utf-8')
         
         response = ollama.generate(
             model=model,
             prompt=prompt,
             images=[base64_image],
-            options={'temperature': 0.1} # Low temp for factual observation
+            options={'temperature': 0.1} 
         )
         return response['response'].strip()
     except Exception as e:
